@@ -135,16 +135,16 @@ function renderForm(){
         <input type="text" id="f_country" placeholder="e.g. Singapore">
       </div>
       <div class="field">
-        <label class="field-label">Organization <span class="zh">单位</span></label>
-        <input type="text" id="f_organization">
+        <label class="field-label">Organization <span class="zh">单位</span> <span class="req">*</span></label>
+        <input type="text" id="f_organization" required>
       </div>
       <div class="field">
         <label class="field-label">Position <span class="zh">职称</span></label>
         <input type="text" id="f_position">
       </div>
       <div class="field">
-        <label class="field-label">Chinese Name <span class="zh">中文姓名</span></label>
-        <input type="text" id="f_chinesename">
+        <label class="field-label">Chinese Name <span class="zh">中文姓名</span> <span class="req">*</span></label>
+        <input type="text" id="f_chinesename" required>
       </div>
       <div class="field">
         <label class="field-label">English Name (same as passport) <span class="zh">英文名字（同护照）</span> <span class="req">*</span></label>
@@ -182,10 +182,11 @@ function renderForm(){
         </div>
       </div>
       <div class="field">
-        <label class="field-label">Dietary Requirements <span class="zh">饮食需求（荤/素）</span></label>
+        <label class="field-label">Dietary Requirements <span class="zh">饮食需求（荤/素/清真）</span> <span class="req">*</span></label>
         <div class="segmented" data-group="dietary">
           <div class="segbtn" data-value="Vegetarian">Vegetarian 素</div>
           <div class="segbtn" data-value="Non-Vegetarian">Non-Vegetarian 荤</div>
+          <div class="segbtn" data-value="Halal">Halal 清真</div>
         </div>
       </div>
       <div class="field">
@@ -196,12 +197,28 @@ function renderForm(){
           <div class="segbtn" data-value="No">No 否</div>
         </div>
       </div>
+      <div class="field">
+        <label class="field-label">Have you paid for the 17–18 event? <span class="req">*</span></label>
+        <div class="hint zh">是否已付款参加7/18日活动</div>
+        <div class="segmented" data-group="paid">
+          <div class="segbtn" data-value="Yes">Yes 是</div>
+          <div class="segbtn" data-value="No">No 否</div>
+        </div>
+      </div>
+      <div class="field">
+        <label class="field-label">Is your Mobile No. linked to PayNow? <span class="req">*</span></label>
+        <div class="hint zh">手机号码是否已连接PayNow</div>
+        <div class="segmented" data-group="paynow">
+          <div class="segbtn" data-value="Yes">Yes 是</div>
+          <div class="segbtn" data-value="No">No 否</div>
+        </div>
+      </div>
       <button class="submit-btn" id="submitBtn" ${firebaseError ? 'disabled' : ''}>Submit Registration 提交注册</button>
       <div id="formStatus"></div>
     </div>
   `;
 
-  const selections = { gender:null, dinner:null, dietary:null, conference:null };
+  const selections = { gender:null, dinner:null, dietary:null, conference:null, paid:null, paynow:null };
 
   document.querySelectorAll('.segmented').forEach(group => {
     const key = group.getAttribute('data-group');
@@ -218,15 +235,22 @@ function renderForm(){
   const submitBtn = document.getElementById('submitBtn');
 
   submitBtn.addEventListener('click', async () => {
+    const organization = document.getElementById('f_organization').value.trim();
+    const chineseName = document.getElementById('f_chinesename').value.trim();
     const englishName = document.getElementById('f_englishname').value.trim();
     const mobile = document.getElementById('f_mobile').value.trim();
 
     const missing = [];
+    if(!organization) missing.push('Organization');
+    if(!chineseName) missing.push('Chinese Name');
     if(!englishName) missing.push('English Name');
     if(!mobile) missing.push('Mobile No.');
     if(!selections.gender) missing.push('Gender');
     if(!selections.dinner) missing.push('Dinner attendance');
+    if(!selections.dietary) missing.push('Dietary Requirements');
     if(!selections.conference) missing.push('Conference attendance');
+    if(!selections.paid) missing.push('Payment for 17-18 event');
+    if(!selections.paynow) missing.push('Mobile No. linked to PayNow');
 
     if(missing.length){
       statusEl.className = 'error';
@@ -236,9 +260,9 @@ function renderForm(){
 
     const record = {
       country: document.getElementById('f_country').value.trim(),
-      organization: document.getElementById('f_organization').value.trim(),
+      organization: organization,
       position: document.getElementById('f_position').value.trim(),
-      chineseName: document.getElementById('f_chinesename').value.trim(),
+      chineseName: chineseName,
       englishName: englishName,
       gender: selections.gender,
       physicianNo: document.getElementById('f_physicianno').value.trim(),
@@ -248,6 +272,8 @@ function renderForm(){
       dinnerAttend: selections.dinner,
       dietary: selections.dietary || '',
       conferenceAttend: selections.conference,
+      paidForEvent: selections.paid,
+      mobileLinkedPaynow: selections.paynow,
       submittedAtMs: Date.now()
     };
 
@@ -329,6 +355,8 @@ const COLUMNS = [
   { key: 'dinnerAttend', label: 'Dinner (17 Oct) 晚宴' },
   { key: 'dietary', label: 'Dietary Requirements 饮食需求' },
   { key: 'conferenceAttend', label: 'Conference (17-18 Oct) 大会' },
+  { key: 'paidForEvent', label: 'Paid for Event 已付款' },
+  { key: 'mobileLinkedPaynow', label: 'Mobile linked to PayNow' },
   { key: 'submittedAt', label: 'Submitted At 提交时间' }
 ];
 
