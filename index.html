@@ -159,7 +159,7 @@ function renderForm(){
       </div>
       <div class="field">
         <label class="field-label">Mobile No. <span class="zh">手机号码</span> <span class="req">*</span></label>
-        <input type="tel" id="f_mobile" required>
+        <input type="tel" id="f_mobile" placeholder="e.g. 9123 4567" required>
       </div>
       <div class="field">
         <label class="field-label">Email Address <span class="zh">电邮</span></label>
@@ -219,6 +219,13 @@ function renderForm(){
     });
   });
 
+  // A valid Singapore mobile number: 8 digits starting with 8 or 9, with an
+  // optional +65/65 prefix and any spaces or dashes the user typed in.
+  function isValidSgMobile(value){
+    const cleaned = value.replace(/[\s\-]/g, '');
+    return /^(?:\+?65)?[89]\d{7}$/.test(cleaned);
+  }
+
   const statusEl = document.getElementById('formStatus');
   const submitBtn = document.getElementById('submitBtn');
 
@@ -242,6 +249,12 @@ function renderForm(){
     if(missing.length){
       statusEl.className = 'error';
       statusEl.textContent = 'Please fill in: ' + missing.join(', ');
+      return;
+    }
+
+    if(!isValidSgMobile(mobile)){
+      statusEl.className = 'error';
+      statusEl.textContent = 'Please enter a valid Singapore mobile number, e.g. 9123 4567 or 8123 4567 (8 digits, starting with 8 or 9).';
       return;
     }
 
