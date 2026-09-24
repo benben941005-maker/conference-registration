@@ -131,10 +131,6 @@ function renderForm(){
     ${firebaseError ? `<div class="card" style="border-color:var(--red);"><b style="color:var(--red);">Setup needed:</b><div class="hint">${escapeHtml(firebaseError)}</div></div>` : ''}
     <div class="card" id="formCard">
       <div class="field">
-        <label class="field-label">Country <span class="zh">国家</span></label>
-        <input type="text" id="f_country" placeholder="e.g. Singapore">
-      </div>
-      <div class="field">
         <label class="field-label">Organization <span class="zh">单位</span> <span class="req">*</span></label>
         <input type="text" id="f_organization" required>
       </div>
@@ -182,23 +178,15 @@ function renderForm(){
         </div>
       </div>
       <div class="field">
-        <label class="field-label">Dietary Requirements <span class="zh">饮食需求（荤/素/清真）</span> <span class="req">*</span></label>
+        <label class="field-label">Dietary Requirements <span class="zh">饮食需求（普通/素/清真）</span> <span class="req">*</span></label>
         <div class="segmented" data-group="dietary">
+          <div class="segbtn" data-value="Normal">Normal 普通</div>
           <div class="segbtn" data-value="Vegetarian">Vegetarian 素</div>
-          <div class="segbtn" data-value="Non-Vegetarian">Non-Vegetarian 荤</div>
           <div class="segbtn" data-value="Halal">Halal 清真</div>
         </div>
       </div>
       <div class="field">
-        <label class="field-label">Will you attend the Conference on 17–18 October? <span class="req">*</span></label>
-        <div class="hint zh">是否参加17/18日大会</div>
-        <div class="segmented" data-group="conference">
-          <div class="segbtn" data-value="Yes">Yes 是</div>
-          <div class="segbtn" data-value="No">No 否</div>
-        </div>
-      </div>
-      <div class="field">
-        <label class="field-label">Have you paid for the 17–18 event? <span class="req">*</span></label>
+        <label class="field-label">Have you paid to attend both 17/18 events? <span class="req">*</span></label>
         <div class="hint zh">是否已付款参加7/18日活动</div>
         <div class="segmented" data-group="paid">
           <div class="segbtn" data-value="Yes">Yes 是</div>
@@ -218,7 +206,7 @@ function renderForm(){
     </div>
   `;
 
-  const selections = { gender:null, dinner:null, dietary:null, conference:null, paid:null, paynow:null };
+  const selections = { gender:null, dinner:null, dietary:null, paid:null, paynow:null };
 
   document.querySelectorAll('.segmented').forEach(group => {
     const key = group.getAttribute('data-group');
@@ -248,7 +236,6 @@ function renderForm(){
     if(!selections.gender) missing.push('Gender');
     if(!selections.dinner) missing.push('Dinner attendance');
     if(!selections.dietary) missing.push('Dietary Requirements');
-    if(!selections.conference) missing.push('Conference attendance');
     if(!selections.paid) missing.push('Payment for 17-18 event');
     if(!selections.paynow) missing.push('Mobile No. linked to PayNow');
 
@@ -259,7 +246,6 @@ function renderForm(){
     }
 
     const record = {
-      country: document.getElementById('f_country').value.trim(),
       organization: organization,
       position: document.getElementById('f_position').value.trim(),
       chineseName: chineseName,
@@ -271,7 +257,6 @@ function renderForm(){
       remark: document.getElementById('f_remark').value.trim(),
       dinnerAttend: selections.dinner,
       dietary: selections.dietary || '',
-      conferenceAttend: selections.conference,
       paidForEvent: selections.paid,
       mobileLinkedPaynow: selections.paynow,
       submittedAtMs: Date.now()
@@ -342,7 +327,6 @@ function renderAdmin(){
 
 const COLUMNS = [
   { key: 'no', label: 'No. 序号' },
-  { key: 'country', label: 'Country 国家' },
   { key: 'organization', label: 'Organization 单位' },
   { key: 'position', label: 'Position 职称' },
   { key: 'chineseName', label: 'Chinese Name 中文姓名' },
@@ -354,7 +338,6 @@ const COLUMNS = [
   { key: 'remark', label: 'Remark 备注' },
   { key: 'dinnerAttend', label: 'Dinner (17 Oct) 晚宴' },
   { key: 'dietary', label: 'Dietary Requirements 饮食需求' },
-  { key: 'conferenceAttend', label: 'Conference (17-18 Oct) 大会' },
   { key: 'paidForEvent', label: 'Paid for Event 已付款' },
   { key: 'mobileLinkedPaynow', label: 'Mobile linked to PayNow' },
   { key: 'submittedAt', label: 'Submitted At 提交时间' }
