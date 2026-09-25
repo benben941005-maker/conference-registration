@@ -131,7 +131,7 @@ function renderForm(){
     ${firebaseError ? `<div class="card" style="border-color:var(--red);"><b style="color:var(--red);">Setup needed:</b><div class="hint">${escapeHtml(firebaseError)}</div></div>` : ''}
     <div class="card" id="formCard">
       <div class="field">
-        <label class="field-label">Organization <span class="zh">单位</span> <span class="req">*</span></label>
+        <label class="field-label">Organization <span class="zh">单位（公司名称）</span> <span class="req">*</span></label>
         <input type="text" id="f_organization" required>
       </div>
       <div class="field">
@@ -154,7 +154,7 @@ function renderForm(){
         </div>
       </div>
       <div class="field">
-        <label class="field-label">Physician Registration No. <span class="zh">中医师注册号</span></label>
+        <label class="field-label">Physician Registration Certificate No. (for CPD credit purposes) <span class="zh">中医师注册证号（给学分用途）</span></label>
         <input type="text" id="f_physicianno">
       </div>
       <div class="field">
@@ -170,8 +170,8 @@ function renderForm(){
         <textarea id="f_remark"></textarea>
       </div>
       <div class="field">
-        <label class="field-label">Will you attend the Dinner on 17 October? <span class="req">*</span></label>
-        <div class="hint zh">是否参加10月17日晚宴</div>
+        <label class="field-label">Are you interested to attend Yiling dinner on 17 October? <span class="req">*</span></label>
+        <div class="hint zh">请问有兴趣参加以岭10月17日晚宴？</div>
         <div class="segmented" data-group="dinner">
           <div class="segbtn" data-value="Yes">Yes 是</div>
           <div class="segbtn" data-value="No">No 否</div>
@@ -180,14 +180,14 @@ function renderForm(){
       <div class="field">
         <label class="field-label">Dietary Requirements <span class="zh">饮食需求（普通/素/清真）</span> <span class="req">*</span></label>
         <div class="segmented" data-group="dietary">
-          <div class="segbtn" data-value="Normal">Normal 普通</div>
-          <div class="segbtn" data-value="Vegetarian">Vegetarian 素</div>
           <div class="segbtn" data-value="Halal">Halal 清真</div>
+          <div class="segbtn" data-value="Vegetarian">Vegetarian 素</div>
+          <div class="segbtn" data-value="Normal">Normal 普通</div>
         </div>
       </div>
       <div class="field">
         <label class="field-label">Have you paid to attend both 17/18 events? <span class="req">*</span></label>
-        <div class="hint zh">是否已付款参加7/18日活动</div>
+        <div class="hint zh">是否已付款参加17/18日活动</div>
         <div class="segmented" data-group="paid">
           <div class="segbtn" data-value="Yes">Yes 是</div>
           <div class="segbtn" data-value="No">No 否</div>
@@ -340,12 +340,12 @@ function renderAdmin(){
 
 const COLUMNS = [
   { key: 'no', label: 'No. 序号' },
-  { key: 'organization', label: 'Organization 单位' },
+  { key: 'organization', label: 'Organization 单位（公司名称）' },
   { key: 'position', label: 'Position 职称' },
   { key: 'chineseName', label: 'Chinese Name 中文姓名' },
   { key: 'englishName', label: 'English Name 英文名字' },
   { key: 'gender', label: 'Gender 性别' },
-  { key: 'physicianNo', label: 'Physician Reg. No. 中医师注册号' },
+  { key: 'physicianNo', label: 'Physician Reg. Certificate No. 中医师注册证号' },
   { key: 'mobile', label: 'Mobile No. 手机号码' },
   { key: 'email', label: 'Email Address 电邮' },
   { key: 'remark', label: 'Remark 备注' },
