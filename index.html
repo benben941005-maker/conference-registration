@@ -128,6 +128,7 @@ function renderForm(){
   root.innerHTML = `
     <h1>2026 Conference Registration</h1>
     <div class="subtitle">2026 第二十二届国际络病学大会海外论坛 · 登记表</div>
+    <div class="subtitle" style="margin-top:-12px; font-weight:600; color:var(--text);">Kinhong Pte Ltd sponsors the conference admission fee of SGD 100, inclusive of dinner (optional)<br>庆丰赞助会议入场费 SGD 100（含晚餐，可选）</div>
     ${firebaseError ? `<div class="card" style="border-color:var(--red);"><b style="color:var(--red);">Setup needed:</b><div class="hint">${escapeHtml(firebaseError)}</div></div>` : ''}
     <div class="card" id="formCard">
       <div class="field">
@@ -200,8 +201,6 @@ function renderForm(){
           <div class="segbtn" data-value="Yes">Yes 是</div>
           <div class="segbtn" data-value="No">No 否</div>
         </div>
-        <div class="hint" style="margin-top:8px;">Entrance fee SGD 100 waived off.</div>
-        <div class="hint zh">入场费 SGD 100 可豁免。</div>
       </div>
       <button class="submit-btn" id="submitBtn" ${firebaseError ? 'disabled' : ''}>Submit Registration 提交注册</button>
       <div id="formStatus"></div>
