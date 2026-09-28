@@ -24,6 +24,11 @@
   .wrap{max-width:640px; margin:0 auto;}
   h1{font-size:20px; margin:4px 0 2px; text-align:center;}
   .subtitle{text-align:center; color:var(--muted); font-size:13px; margin-bottom:18px;}
+  .fee-note{text-align:center; margin:-8px 0 18px;}
+  .fee-title{font-weight:600; color:var(--text); font-size:13px; margin-bottom:8px; line-height:1.5;}
+  .fee-label{font-size:13px; color:var(--text);}
+  .fee-amt{font-weight:700; font-size:15px; color:var(--text); font-variant-numeric:tabular-nums; margin:2px 0 10px;}
+  .fee-amt:last-child{margin-bottom:0;}
   .card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.04);}
   label.field-label{display:block; font-weight:600; font-size:14.5px; margin-bottom:8px;}
   .req{color:var(--red);}
@@ -128,7 +133,13 @@ function renderForm(){
   root.innerHTML = `
     <h1>2026 Conference Registration</h1>
     <div class="subtitle">2026 第二十二届国际络病学大会海外论坛 · 登记表</div>
-    <div class="subtitle" style="margin-top:-12px; font-weight:600; color:var(--text);">Yiling/Kinhong sponsor the conference admission fee: SGD 280 (inclusive of dinner) or SGD 100 (dinner not included, optional)<br>以岭/庆丰赞助会议入场费：含晚宴 SGD 280，不含晚宴（可选）SGD 100</div>
+    <div class="fee-note">
+      <div class="fee-title">Yiling/Kinhong sponsors the conference admission fee<br>以岭/庆丰赞助会议入场费</div>
+      <div class="fee-label">Inclusive of dinner 含晚宴</div>
+      <div class="fee-amt">SGD 280</div>
+      <div class="fee-label">Dinner not included (optional) 不含晚宴（可选）</div>
+      <div class="fee-amt">SGD 100</div>
+    </div>
     ${firebaseError ? `<div class="card" style="border-color:var(--red);"><b style="color:var(--red);">Setup needed:</b><div class="hint">${escapeHtml(firebaseError)}</div></div>` : ''}
     <div class="card" id="formCard">
       <div class="field">
