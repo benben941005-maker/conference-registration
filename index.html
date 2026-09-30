@@ -25,11 +25,10 @@
   h1{font-size:20px; margin:4px 0 2px; text-align:center;}
   .subtitle{text-align:center; color:var(--muted); font-size:13px; margin-bottom:18px;}
   .fee-note{text-align:center; margin:-8px 0 18px;}
-  .fee-title{font-weight:600; color:var(--text); font-size:13px; margin-bottom:6px; line-height:1.5;}
-  .fee-table{margin:0 auto; border-collapse:collapse; font-size:13px; color:var(--text);}
-  .fee-table td{padding:2px 6px;}
-  .fee-table td:first-child{text-align:right;}
-  .fee-table td.fee-amt{text-align:center; font-weight:700; font-variant-numeric:tabular-nums; min-width:64px;}
+  .fee-title{font-weight:600; color:var(--text); font-size:13px; margin-bottom:8px; line-height:1.5;}
+  .fee-label{font-size:13px; color:var(--text);}
+  .fee-amt{font-weight:700; font-size:15px; color:var(--text); font-variant-numeric:tabular-nums; margin:2px 0 10px;}
+  .fee-amt:last-child{margin-bottom:0;}
   .card{background:var(--card); border:1px solid var(--border); border-radius:14px; padding:18px; margin-bottom:16px; box-shadow:0 1px 3px rgba(0,0,0,0.04);}
   label.field-label{display:block; font-weight:600; font-size:14.5px; margin-bottom:8px;}
   .req{color:var(--red);}
@@ -135,11 +134,11 @@ function renderForm(){
     <h1>2026 Conference Registration</h1>
     <div class="subtitle">2026 第二十二届国际络病学大会海外论坛 · 登记表</div>
     <div class="fee-note">
-      <div class="fee-title">Yiling/Kinhong sponsor the conference admission fee<br>以岭/庆丰赞助会议入场费</div>
-      <table class="fee-table">
-        <tr><td>Inclusive of dinner 含晚宴</td><td class="fee-amt">SGD 280</td></tr>
-        <tr><td>Dinner not included (optional) 不含晚宴（可选）</td><td class="fee-amt">SGD 100</td></tr>
-      </table>
+      <div class="fee-title">Yiling/Kinhong sponsors the conference admission fee<br>以岭/庆丰赞助会议入场费</div>
+      <div class="fee-label">Inclusive of dinner 含晚宴</div>
+      <div class="fee-amt">SGD 280</div>
+      <div class="fee-label">Dinner not included (optional) 不含晚宴（可选）</div>
+      <div class="fee-amt">SGD 100</div>
     </div>
     ${firebaseError ? `<div class="card" style="border-color:var(--red);"><b style="color:var(--red);">Setup needed:</b><div class="hint">${escapeHtml(firebaseError)}</div></div>` : ''}
     <div class="card" id="formCard">
@@ -190,7 +189,7 @@ function renderForm(){
           <div class="segbtn" data-value="No">No 否</div>
         </div>
       </div>
-      <div class="field">
+      <div class="field" id="dietaryField" style="display:none;">
         <label class="field-label">Dietary Requirements <span class="zh">饮食需求（普通/素/清真）</span> <span class="req">*</span></label>
         <div class="segmented" data-group="dietary">
           <div class="segbtn" data-value="Halal">Halal 清真</div>
@@ -199,8 +198,8 @@ function renderForm(){
         </div>
       </div>
       <div class="field">
-        <label class="field-label">Have you paid to attend both 17/18 events? <span class="req">*</span></label>
-        <div class="hint zh">是否已付款参加17/18日活动</div>
+        <label class="field-label">Have you paid to attend the 23rd World Congress of Chinese Medicine on 17/18 events? <span class="req">*</span></label>
+        <div class="hint zh">是否已付款参加第二十三届世界中医药大会17/18号的活动？</div>
         <div class="segmented" data-group="paid">
           <div class="segbtn" data-value="Yes">Yes 是</div>
           <div class="segbtn" data-value="No">No 否</div>
@@ -221,6 +220,8 @@ function renderForm(){
 
   const selections = { gender:null, dinner:null, dietary:null, paid:null, paynow:null };
 
+  const dietaryFieldEl = document.getElementById('dietaryField');
+
   document.querySelectorAll('.segmented').forEach(group => {
     const key = group.getAttribute('data-group');
     group.querySelectorAll('.segbtn').forEach(btn => {
@@ -228,6 +229,20 @@ function renderForm(){
         group.querySelectorAll('.segbtn').forEach(b => b.classList.remove('selected'));
         btn.classList.add('selected');
         selections[key] = btn.getAttribute('data-value');
+
+        // Dietary Requirements only applies (and is only shown/required) when
+        // the person said Yes to attending the 17 October dinner. Switching
+        // back to No hides it again and clears any prior selection so a
+        // stale choice doesn't get submitted along with "No".
+        if(key === 'dinner'){
+          if(selections.dinner === 'Yes'){
+            dietaryFieldEl.style.display = '';
+          } else {
+            dietaryFieldEl.style.display = 'none';
+            selections.dietary = null;
+            dietaryFieldEl.querySelectorAll('.segbtn').forEach(b => b.classList.remove('selected'));
+          }
+        }
       });
     });
   });
@@ -255,7 +270,7 @@ function renderForm(){
     if(!mobile) missing.push('Mobile No.');
     if(!selections.gender) missing.push('Gender');
     if(!selections.dinner) missing.push('Dinner attendance');
-    if(!selections.dietary) missing.push('Dietary Requirements');
+    if(selections.dinner === 'Yes' && !selections.dietary) missing.push('Dietary Requirements');
     if(!selections.paid) missing.push('Payment for 17-18 event');
     if(!selections.paynow) missing.push('Mobile No. linked to PayNow');
 
